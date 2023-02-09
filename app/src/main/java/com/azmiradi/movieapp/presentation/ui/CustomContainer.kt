@@ -1,10 +1,12 @@
 package com.azmiradi.movieapp.presentation.ui
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -12,13 +14,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.azmiradi.movieapp.presentation.BaseViewModel
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun CustomContainer(
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     modifier: Modifier,
     baseViewModel: BaseViewModel,
-    content: @Composable ColumnScope.() -> Unit
+    topBar: @Composable (() -> Unit)? = null,
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     ProgressBar(isShow = baseViewModel.isLoading())
 
@@ -31,10 +35,17 @@ fun CustomContainer(
         }
     }
 
-    Column(
-        verticalArrangement = verticalArrangement,
-        horizontalAlignment = horizontalAlignment,
-        modifier = modifier,
-        content = content
-    )
+    Scaffold(topBar = {
+        if (topBar != null) {
+            topBar()
+        }
+    }, content = {
+        Column(
+            verticalArrangement = verticalArrangement,
+            horizontalAlignment = horizontalAlignment,
+            modifier = modifier,
+            content = content
+        )
+    })
+
 }

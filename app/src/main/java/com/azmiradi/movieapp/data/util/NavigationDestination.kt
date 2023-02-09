@@ -1,6 +1,8 @@
-package com.azmiradi.movieapp.data.util;
+package com.azmiradi.movieapp.data.util
 
-
-public enum NavigationDestination {
-    PLAYING_NOW,TOP_RATED,SEARCH,FAVORITE
+enum class NavigationDestination(val title: String) {
+    PLAYING_NOW("Playing Now"),
+    TOP_RATED("Top Rated"),
+    SEARCH("Search"),
+    FAVORITE("Favorite")
 }

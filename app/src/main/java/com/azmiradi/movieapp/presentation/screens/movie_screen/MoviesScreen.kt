@@ -7,11 +7,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -35,37 +39,49 @@ import com.google.accompanist.pager.rememberPagerState
 fun MoviesScreen(
     destination: NavigationDestination,
     viewModel: MoviesViewModel = hiltViewModel(),
-    onDetailsClick:(String)->Unit
+    onDetailsClick: (String) -> Unit
 ) {
     val pagerState = rememberPagerState()
     val searchKeyword = rememberSaveable {
         mutableStateOf("")
     }
 
+    if (destination != NavigationDestination.SEARCH) {
+        LaunchedEffect(key1 = Unit) {
+            viewModel.getMovies(destination)
+        }
+    }
     CustomContainer(
         horizontalAlignment = CenterHorizontally, baseViewModel = viewModel,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        if (destination == NavigationDestination.SEARCH) {
-            SearchBar(
-                searchText = searchKeyword.value,
-                placeholderText = "Search Movies",
-                onSearchTextChanged = {
-                    searchKeyword.value = it
-                },
-                onClearClick = {
-                    viewModel.resetState()
-                    searchKeyword.value = ""
-                },
-                startSearch = {
-                    viewModel.getMovies(destination, keyword = searchKeyword.value)
-                })
-            Spacer(modifier = Modifier.height(10.dp))
-        } else {
-            LaunchedEffect(key1 = Unit) {
-                viewModel.getMovies(destination)
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            if (destination == NavigationDestination.SEARCH) {
+                SearchBar(
+                    searchText = searchKeyword.value,
+                    placeholderText = "Search Movies",
+                    onSearchTextChanged = {
+                        searchKeyword.value = it
+                    },
+                    onClearClick = {
+                        viewModel.resetState()
+                        searchKeyword.value = ""
+                    },
+                    startSearch = {
+                        viewModel.getMovies(destination, keyword = searchKeyword.value)
+                    })
+                Spacer(modifier = Modifier.height(10.dp))
+            } else {
+                TopAppBar {
+                    Text(
+                        text = destination.title, modifier = Modifier.align(
+                            CenterVertically
+                        ).padding(start = 10.dp)
+                    )
+                }
             }
         }
+    ) {
+
         viewModel.movieState.value.data?.let {
             AnimatedVisibility(
                 visible = it.isNotEmpty(),
