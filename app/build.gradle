@@ -99,5 +99,4 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:$nav_version"
     implementation 'com.github.a914-gowtham:compose-ratingbar:1.2.4'
     implementation "com.google.accompanist:accompanist-navigation-material:0.28.0"
-
 }
