@@ -5,13 +5,13 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.Lifecycle
 import com.azmiradi.movieapp.presentation.BaseViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -48,4 +48,12 @@ fun CustomContainer(
         )
     })
 
+    OnLifecycleEvent(onEvent = { owner, event ->
+        when (event) {
+            Lifecycle.Event.ON_STOP -> {
+                baseViewModel.resetState()
+            }
+            else -> {}
+        }
+    })
 }
